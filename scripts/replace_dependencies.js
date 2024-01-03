@@ -13,13 +13,13 @@ const writeJson = (filePath, data) => {
 };
 
 const findPackageJsonPath = (dep) => {
-  const depName = dep.split('/')[1].replace(/^react-/, '');
+  let depName = dep.split('/')[1];
+  if (/^react-/.test(depName)) {
+    depName = depName.replace(/^react-/, '');
+    return path.join(rootDir, 'react', depName, 'package.json');
+  }
 
-  const possiblePaths = [
-    path.join(rootDir, 'react', depName, 'package.json'),
-    path.join(rootDir, 'core', depName, 'package.json'),
-  ];
-  return possiblePaths.find((p) => fs.existsSync(p));
+  return path.join(rootDir, 'core', depName, 'package.json');
 };
 
 // Main function to replace workspace dependencies
